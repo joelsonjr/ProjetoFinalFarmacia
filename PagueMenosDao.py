@@ -32,16 +32,22 @@ def recoverMedicine(site):
 def recoverMedicinePagueMenos():
     site = "https://www.paguemenos.com.br/medicamentos-e-saude";
     recoverMedicine(site)
-    #page = requests.get(site)
-    #soup = BeautifulSoup(page.content, 'html.parser')
-    #try:
-    #    itens = soup.find('div', class_="vitrine resultItemsWrapper").script.get_text()
-    #    print(itens)
-        #for page in pages:
-            #p = foodsSite[0] + "?Pagina=" + page.get_text()
-            #recoverZonaSulFood(p)
-    #except AttributeError as e:
-    #    ""
+    try:
+        page = requests.get(site)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        js = soup.find('div', class_='vitrine resultItemsWrapper').find('script').get_text()
+        print(js)
+        print(re.findall(r'pagecount_43841405 = \d+?',js))
+        #p = re.compile('pagecount_43841405 = (.*?);')
+        #pages = soup.find('div', class_='vitrine resultItemsWrapper')
+        #num_pages = ast.literal_eval(re.search(r'\d+',pages[0].find('a', class_='last').get('onclick')).group(0))
+        #num_page = 0
+        #while (num_page < num_pages):
+        #    s = "https://www.drogariavenancio.com.br/categoria.asp?idcategoria=1014&nivel=03&categoria=Medicamentos&viewType=M&nrRows=20&idPage=" + str(num_page) + "2&ordem=V"
+        #    recoverMedicine(s)
+        #    num_page += 1
+    except AttributeError as e:
+        ""
             
 recoverMedicinePagueMenos()
 

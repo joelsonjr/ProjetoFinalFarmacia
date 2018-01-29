@@ -12,24 +12,26 @@ def recoverMedicine(site):
     #cursor.execute("delete from Medicamento where id_empresa = 1;")
     page = requests.get(site)
     soup = BeautifulSoup(page.content, 'html.parser')
-    medicines = soup.find('div', class_='Produtos').find_all('li', class_="Produto")
+    medicines = soup.find('div', class_='category-products').find_all('div', class_='product-info')
     for medicine in medicines:
         try:
-            title = medicine.find('div', class_='Nome').get_text().strip()
-            price = medicine.find('div', class_='PrecoAgrupado').find('div', class_='PrecoPor').get_text()
-            print(title)
-            print(price)        
+            print(medicine.find('div', class_='product-name').find('a', class_='show-hover').get_text().strip())
+            print(medicine.find('div', class_='product-price').find('p', class_='special-price').find('span', class_='price').get_text().strip())
+#            title = medicine.find('div', class_='Nome').get_text().strip()
+#            price = medicine.find('div', class_='PrecoAgrupado').find('div', class_='PrecoPor').get_text()
+#            print(title)
+#            print(price)        
 #            cursor.execute("""
 #                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
 #                           VALUES (1,?,?)
 #                           """, (title, price[0]))
         except AttributeError as e:
             print(" NAO CONSEGUIU RECUPERAR O ITEM ")
-            continue        
+            continue
             
 
-def recoverMedicineDrogariaNet():
-    site = "http://www.drogarianet.com.br/medicamentos.html";
+def recoverMedicineDrogasRaia():
+    site = "http://www.drogaraia.com.br/saude/medicamentos.html";
     recoverMedicine(site)
     #page = requests.get(site)
     #soup = BeautifulSoup(page.content, 'html.parser')
@@ -42,9 +44,8 @@ def recoverMedicineDrogariaNet():
     #except AttributeError as e:
     #    ""
             
-recoverMedicineDrogariaNet()
+recoverMedicineDrogasRaia()
 
 conn.commit()
 conn.close()
 print('Dados inseridos com sucesso.')
-

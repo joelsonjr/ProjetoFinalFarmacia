@@ -1,3 +1,4 @@
+import ast
 import re
 import requests
 import numpy as np
@@ -8,46 +9,44 @@ conn = sqlite3.connect('products.db')
 
 cursor = conn.cursor()
 
-def recoverMedicine(site):
-    #cursor.execute("delete from Medicamento where id_empresa = 1;")
+def recoverMedicine(site):    
     page = requests.get(site)
     soup = BeautifulSoup(page.content, 'html.parser')
     medicines = soup.find_all('li', class_="nome")
-    for medicine in medicines:
-        print(medicine.get_text().strip())
         
     prices = soup.find_all('li', class_="precoPor")
-    for price in prices:
-        print(price.get_text().strip())
-#        try:
-#            title = medicine.find('p', class_='price').a.get('title')
-#            price = medicine.find('p', class_='price').a.find('ins', class_='price-new').get_text()
-#            print(title)
-#            print(price)
+
+    if len(medicines) != len(prices):
+        return
+    
+    max_item = len(medicines)
+    index = 0
+    while (index < max_item):
+        print(medicines[index].get_text().strip())
+        print(prices[index].find('b').get_text())
+        index += 1
 #            cursor.execute("""
 #                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
 #                           VALUES (1,?,?)
 #                           """, (title, price[0]))
- #       except AttributeError as e:
-#            print(" NAO CONSEGUIU RECUPERAR O ITEM ")
-#            continue        
-            
 
-#Recuperando itens de açougue do supermercado Zona Sul
 def recoverMedicineVenancio():
     site = "https://www.drogariavenancio.com.br/departamento/1014/03/medicamentos";
     recoverMedicine(site)
-    #page = requests.get(site)
-    #soup = BeautifulSoup(page.content, 'html.parser')
-    #try:
-    #    itens = soup.find('div', class_="vitrine resultItemsWrapper").script.get_text()
-    #    print(itens)
-        #for page in pages:
-            #p = foodsSite[0] + "?Pagina=" + page.get_text()
-            #recoverZonaSulFood(p)
-    #except AttributeError as e:
-    #    ""
-            
+    try:
+        page = requests.get(site)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        pages = soup.find_all('div', class_="paginacao")
+        num_pages = ast.literal_eval(re.search(r'\d+',pages[0].find('a', class_='last').get('onclick')).group(0))
+        num_page = 0
+        while (num_page < num_pages):
+            s = "https://www.drogariavenancio.com.br/categoria.asp?idcategoria=1014&nivel=03&categoria=Medicamentos&viewType=M&nrRows=20&idPage=" + str(num_page) + "2&ordem=V"
+            recoverMedicine(s)
+            num_page += 1
+    except AttributeError as e:
+        ""
+        
+#cursor.execute("delete from Medicamento where id_empresa = 1;")
 recoverMedicineVenancio()
 
 conn.commit()

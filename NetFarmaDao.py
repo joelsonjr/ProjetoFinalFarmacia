@@ -9,27 +9,26 @@ conn = sqlite3.connect('products.db')
 cursor = conn.cursor()
 
 def recoverMedicine(site):
-    #cursor.execute("delete from Medicamento where id_empresa = 1;")
     page = requests.get(site)
     soup = BeautifulSoup(page.content, 'html.parser')
-    medicines = soup.find('div', class_='Produtos').find_all('li', class_="Produto")
-    for medicine in medicines:
-        try:
-            title = medicine.find('div', class_='Nome').get_text().strip()
-            price = medicine.find('div', class_='PrecoAgrupado').find('div', class_='PrecoPor').get_text()
-            print(title)
-            print(price)        
+    try:
+        medicines = soup.find('div', id='lista-produtos').find_all('div', class_='product-item ')
+        for medicine in medicines:
+            print(medicine)
+#            title = medicine.find('div', class_='Nome').get_text().strip()
+#            price = medicine.find('div', class_='PrecoAgrupado').find('div', class_='PrecoPor').get_text()
+#            print(title)
+#            print(price)        
 #            cursor.execute("""
 #                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
 #                           VALUES (1,?,?)
 #                           """, (title, price[0]))
-        except AttributeError as e:
-            print(" NAO CONSEGUIU RECUPERAR O ITEM ")
-            continue        
+    except AttributeError as e:
+        print(" NAO CONSEGUIU RECUPERAR O ITEM ")
             
 
-def recoverMedicineDrogariaNet():
-    site = "http://www.drogarianet.com.br/medicamentos.html";
+def recoverMedicineNetFarma():
+    site = "https://www.netfarma.com.br/categoria/medicamentos";
     recoverMedicine(site)
     #page = requests.get(site)
     #soup = BeautifulSoup(page.content, 'html.parser')
@@ -42,9 +41,8 @@ def recoverMedicineDrogariaNet():
     #except AttributeError as e:
     #    ""
             
-recoverMedicineDrogariaNet()
+recoverMedicineNetFarma()
 
 conn.commit()
 conn.close()
 print('Dados inseridos com sucesso.')
-
