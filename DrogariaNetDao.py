@@ -1,4 +1,5 @@
 import re
+import ast
 import requests
 import numpy as np
 from bs4 import BeautifulSoup
@@ -8,9 +9,10 @@ conn = sqlite3.connect('products.db')
 
 cursor = conn.cursor()
 
-def recoverMedicine(site):
-    #cursor.execute("delete from Medicamento where id_empresa = 1;")
+def recoverMedicine(site):    
     page = requests.get(site)
+    print("=============================================================================================")
+    print(site)
     soup = BeautifulSoup(page.content, 'html.parser')
     medicines = soup.find('div', class_='Produtos').find_all('li', class_="Produto")
     for medicine in medicines:
@@ -24,23 +26,28 @@ def recoverMedicine(site):
 #                           VALUES (1,?,?)
 #                           """, (title, price[0]))
         except AttributeError as e:
-            print(" NAO CONSEGUIU RECUPERAR O ITEM ")
             continue        
             
 
 def recoverMedicineDrogariaNet():
+    #cursor.execute("delete from Medicamento where id_empresa = 1;")
     site = "http://www.drogarianet.com.br/medicamentos.html";
     recoverMedicine(site)
-    #page = requests.get(site)
-    #soup = BeautifulSoup(page.content, 'html.parser')
-    #try:
-    #    itens = soup.find('div', class_="vitrine resultItemsWrapper").script.get_text()
-    #    print(itens)
-        #for page in pages:
-            #p = foodsSite[0] + "?Pagina=" + page.get_text()
-            #recoverZonaSulFood(p)
-    #except AttributeError as e:
-    #    ""
+    try:
+        page = requests.get(site)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        str_num_itens = re.findall(r'(\d+)', soup.find('div', class_='ToolbarContagem').get_text())
+        num_itens = ast.literal_eval(str_num_itens[0])
+        print(num_itens)
+        num_pages = num_itens / 16
+        print(num_pages)
+        num_page = 1
+        while (num_page < num_pages):
+            s = "http://www.drogarianet.com.br/medicamentos.html?p=" + str(num_page)
+            recoverMedicine(s)
+            num_page += 1
+    except AttributeError as e:
+        ""
             
 recoverMedicineDrogariaNet()
 

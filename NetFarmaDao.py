@@ -10,11 +10,15 @@ cursor = conn.cursor()
 
 def recoverMedicine(site):
     page = requests.get(site)
+    print(site)
     soup = BeautifulSoup(page.content, 'html.parser')
-    try:
-        medicines = soup.find('div', id='lista-produtos').find_all('div', class_='product-item ')
-        for medicine in medicines:
-            print(medicine)
+    #<div id="lista-produtos" class="product-list">
+    print(soup.find('option', value_='lancamento'))
+    #print(soup.find('div', class_='product-list'))
+ #   try:        
+#        medicines = soup.find('div', id='product-list').find_all('div', class_='product-item ')
+#        for medicine in medicines:
+#            print(medicine)
 #            title = medicine.find('div', class_='Nome').get_text().strip()
 #            price = medicine.find('div', class_='PrecoAgrupado').find('div', class_='PrecoPor').get_text()
 #            print(title)
@@ -23,8 +27,8 @@ def recoverMedicine(site):
 #                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
 #                           VALUES (1,?,?)
 #                           """, (title, price[0]))
-    except AttributeError as e:
-        print(" NAO CONSEGUIU RECUPERAR O ITEM ")
+#    except AttributeError as e:
+#        print(" NAO CONSEGUIU RECUPERAR O ITEM ")
             
 
 def recoverMedicineNetFarma():

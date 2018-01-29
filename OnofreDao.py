@@ -9,9 +9,8 @@ conn = sqlite3.connect('products.db')
 cursor = conn.cursor()
 
 def recoverMedicine(site):
-    #cursor.execute("delete from Medicamento where id_empresa = 1;")
     page = requests.get(site)
-    soup = BeautifulSoup(page.content, 'html.parser')
+    soup = BeautifulSoup(page.content, 'html.parser')    
     medicines = soup.find_all('div', class_='product-price')
     for medicine in medicines:
         try:
@@ -25,7 +24,24 @@ def recoverMedicine(site):
 
 def recoverMedicineOnofre():
     site = "https://www.onofre.com.br/medicamentos/51/01";
-    recoverMedicine(site)
+    #recoverMedicine(site)
+    try:
+        page = requests.get(site)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        str_num_itens = re.findall(r'(\d+)', soup.find('div', class_="item pages last").get_text())
+        print(str_num_itens)
+        num_itens = ast.literal_eval(str_num_itens[2])
+        #print(num_itens)
+        #num_pages = num_itens / 15
+        #print(num_pages)
+        #num_page = 1
+        #while (num_page < num_pages):            
+        #    s = "http://www.drogaraia.com.br/saude/medicamentos.html?p=" + str(num_page)
+        #    recoverMedicine(s)
+        #    num_page += 1
+    except AttributeError as e:
+        ""
+    
     #page = requests.get(site)
     #soup = BeautifulSoup(page.content, 'html.parser')
     #try:

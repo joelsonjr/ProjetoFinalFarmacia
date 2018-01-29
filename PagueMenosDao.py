@@ -31,7 +31,7 @@ def recoverMedicine(site):
 #Recuperando itens de açougue do supermercado Zona Sul
 def recoverMedicinePagueMenos():
     site = "https://www.paguemenos.com.br/medicamentos-e-saude";
-    recoverMedicine(site)
+    #recoverMedicine(site)
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')
