@@ -35,9 +35,7 @@ def recoverMedicinePacheco():
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')
         str_num_itens = re.findall(r'(\d+)', soup.find('div', class_='vitrine resultItemsWrapper').find_all('script')[0].get_text())[2]
-        print(str_num_itens)
         num_pages = ast.literal_eval(str_num_itens)
-        print(num_pages)
         num_page = 1
         while (num_page < num_pages):            
             s = "https://www.drogariaspacheco.com.br/medicamentos/#" + str(num_page)

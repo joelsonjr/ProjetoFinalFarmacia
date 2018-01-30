@@ -13,7 +13,7 @@ def recoverMedicine(site):
     print(site)
     soup = BeautifulSoup(page.content, 'html.parser')
     #<div id="lista-produtos" class="product-list">
-    print(soup.find('option', value_='lancamento'))
+    print(soup.find_all('div', class__='product-list'))
     #print(soup.find('div', class_='product-list'))
  #   try:        
 #        medicines = soup.find('div', id='product-list').find_all('div', class_='product-item ')

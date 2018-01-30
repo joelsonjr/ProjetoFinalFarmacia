@@ -1,3 +1,4 @@
+import ast
 import re
 import requests
 import numpy as np
@@ -30,38 +31,23 @@ def recoverMedicine(site):
 
 def recoverMedicineUltraFarma():
     site = "http://www.ultrafarma.com.br/categoria-372/ordem-1/Medicamentos.html";
-    #recoverMedicine(site)
+    recoverMedicine(site)
     try:
         page = requests.get(site)
-        soup = BeautifulSoup(page.content, 'html.parser')
-        print(soup.br.find('div', align_='center'))
-        #for b in soup.find_all('br'):
-        #    try:
-        #        print(b)
-                #print(b.find('div', align_='center'))#.find('span', class_='txt_cinza')
-         #   except AttributeError as e:
-         #       print(" NAO CONSEGUIU RECUPERAR O ITEM ")
-         #       continue
-        #for p in pages:
-        #    print(p)
-        #num_pages = ast.literal_eval(re.search(r'\d+',pages[0].find('a', class_='last').get('onclick')).group(0))
-        #num_page = 0
-        #while (num_page < num_pages):
-        #    s = "https://www.drogariavenancio.com.br/categoria.asp?idcategoria=1014&nivel=03&categoria=Medicamentos&viewType=M&nrRows=20&idPage=" + str(num_page) + "2&ordem=V"
-        #    recoverMedicine(s)
-        #    num_page += 1
+        soup = BeautifulSoup(page.content, 'html.parser')        
+        num_pages = 0
+        for item in soup.find_all('span', class_='txt_cinza'):            
+            if item.get_text():
+                num = re.findall(r'(\d+)', item.get_text())[0]
+                num_pages = ast.literal_eval(num)
+        num_page = 1
+        while (num_page < num_pages):            
+            s = "http://www.ultrafarma.com.br/categoria-372/ordem-1/pagina-" + str(num_page) + "/Medicamentos.html"
+            recoverMedicine(s)
+            num_page += 1
+        
     except AttributeError as e:
         ""
-    #page = requests.get(site)
-    #soup = BeautifulSoup(page.content, 'html.parser')
-    #try:
-    #    itens = soup.find('div', class_="vitrine resultItemsWrapper").script.get_text()
-    #    print(itens)
-        #for page in pages:
-            #p = foodsSite[0] + "?Pagina=" + page.get_text()
-            #recoverZonaSulFood(p)
-    #except AttributeError as e:
-    #    ""
             
 recoverMedicineUltraFarma()
 
