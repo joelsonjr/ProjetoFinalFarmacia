@@ -25,18 +25,25 @@ def recoverMedicine(site):
 #                           """, (title, price[0]))
         except AttributeError as e:
             print(" NAO CONSEGUIU RECUPERAR O ITEM ")
-            continue        
+            continue
             
 
 def recoverMedicineUltraFarma():
     site = "http://www.ultrafarma.com.br/categoria-372/ordem-1/Medicamentos.html";
-    recoverMedicine(site)
+    #recoverMedicine(site)
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')
-        pages = soup.find_all('div', align_="center")#.find('span', class_='txt_cinza')
-        for p in pages:
-            print(p)
+        print(soup.br.find('div', align_='center'))
+        #for b in soup.find_all('br'):
+        #    try:
+        #        print(b)
+                #print(b.find('div', align_='center'))#.find('span', class_='txt_cinza')
+         #   except AttributeError as e:
+         #       print(" NAO CONSEGUIU RECUPERAR O ITEM ")
+         #       continue
+        #for p in pages:
+        #    print(p)
         #num_pages = ast.literal_eval(re.search(r'\d+',pages[0].find('a', class_='last').get('onclick')).group(0))
         #num_page = 0
         #while (num_page < num_pages):

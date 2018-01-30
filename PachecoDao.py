@@ -1,3 +1,4 @@
+import ast
 import re
 import requests
 import numpy as np
@@ -29,27 +30,21 @@ def recoverMedicine(site):
 
 def recoverMedicinePacheco():
     site = "https://www.drogariaspacheco.com.br/medicamentos/";
-    #recoverMedicine(site)
+    recoverMedicine(site)
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')
-        print(soup.find('div', class_='search-single-navigator').get('ul'))#.find('ul', class_='productClusterSearchableIds  even'))
-        return
-        str_num_itens = re.findall(r'(\d+)', soup.find('div', class_='toolbar').find('div', class_='limit no-padding').find('div', class_='col-1').find('div', class_='pager inline').find('div', class_='count-containe inline').find('p', class_='amount inline amount--has-pages').get_text())
+        str_num_itens = re.findall(r'(\d+)', soup.find('div', class_='vitrine resultItemsWrapper').find_all('script')[0].get_text())[2]
         print(str_num_itens)
-        num_itens = ast.literal_eval(str_num_itens[0])
-        print(num_itens)
-        num_pages = num_itens / 24
+        num_pages = ast.literal_eval(str_num_itens)
         print(num_pages)
         num_page = 1
         while (num_page < num_pages):            
-            s = "http://www.drogaraia.com.br/saude/medicamentos.html?p=" + str(num_page)
+            s = "https://www.drogariaspacheco.com.br/medicamentos/#" + str(num_page)
             recoverMedicine(s)
             num_page += 1
     except AttributeError as e:
         ""
-    
-    #function to get num page
             
 recoverMedicinePacheco()
 
