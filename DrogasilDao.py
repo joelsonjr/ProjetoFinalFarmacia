@@ -12,25 +12,37 @@ cursor = conn.cursor()
 def recoverMedicine(site):    
     page = requests.get(site)
     soup = BeautifulSoup(page.content, 'html.parser')
-    medicines = soup.find('div', class_='category-products').find_all('div', class_='product-info')
+    '''
+    medicines = soup.find_all('div', class_='product-info')
     for medicine in medicines:
         try:
-            title = medicine.find('div', class_='product-name').find('a', class_='show-hover').get_text().strip()
-            price = medicine.find('div', class_='product-price').find('p', class_='special-price').find('span', class_='price').get_text().strip()
-            print(title)
-            print(re.findall(r'(\d+\,?\d*)',price)[0])
+            print(medicine.find('div', class_='product-name').find('a', class_='show-hover').get_text())
+        except AttributeError as e:
+            continue
+    ''' 
+    prices = soup.find_all('div', class_='product-price')
+    for price in prices:
+        try:
+            print(price.find('div', class_='price-box').find('p', class_='special-price').find('span', property_='price').get_text())
+        except AttributeError as e:
+            continue
+        
+    '''
+    medicines = soup.find_all('div', class_='caption text-center')
+    for medicine in medicines:
+        try:
+            print(medicine.p.get_text().strip())
+            print(medicine.find_all('div')[2].find('div').find('div', class_='row').find('div').h4.find_all('label')[1].get_text())
 #            cursor.execute("""
 #                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
 #                           VALUES (1,?,?)
 #                           """, (title, price[0]))
         except AttributeError as e:
-            print(" NAO CONSEGUIU RECUPERAR O ITEM ")
             continue
-            
-
-def recoverMedicineDrogasRaia():
+        '''
+def recoverMedicineDrogasil():
     #cursor.execute("delete from Medicamento where id_empresa = 1;")
-    site = "http://www.drogaraia.com.br/saude/medicamentos.html";
+    site = "http://www.drogasil.com.br/medicamentos.html";
     recoverMedicine(site)
     try:
         page = requests.get(site)
@@ -46,7 +58,7 @@ def recoverMedicineDrogasRaia():
     except AttributeError as e:
         ""
             
-recoverMedicineDrogasRaia()
+recoverMedicineDrogasil()
 
 conn.commit()
 conn.close()

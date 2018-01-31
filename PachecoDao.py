@@ -18,7 +18,7 @@ def recoverMedicine(site):
             title = medicine.find('h3').get_text()
             price = medicine.find('span', class_='bestPrice transition_all').find('span', class_='the-price').get_text()
             print(title)
-            print(price)
+            print(re.findall(r'(\d+\,?\d*)',price)[0])
 #            cursor.execute("""
 #                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
 #                           VALUES (1,?,?)

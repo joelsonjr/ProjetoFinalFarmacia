@@ -17,7 +17,7 @@ def recoverMedicine(site):
             title = medicine.find('p', class_='price').a.get('title')
             price = medicine.find('p', class_='price').a.find('ins', class_='price-new').get_text()
             print(title)
-            print(price)
+            print(re.findall(r'(\d+\,?\d*)',price)[0])
 #            cursor.execute("""
 #                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
 #                           VALUES (1,?,?)
@@ -29,7 +29,7 @@ def recoverMedicine(site):
 def recoverMedicinePagueMenos():
     #cursor.execute("delete from Medicamento where id_empresa = 1;")
     site = "https://www.paguemenos.com.br/medicamentos-e-saude";
-    #recoverMedicine(site)
+    recoverMedicine(site)
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')

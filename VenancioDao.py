@@ -22,8 +22,10 @@ def recoverMedicine(site):
     max_item = len(medicines)
     index = 0
     while (index < max_item):
-        print(medicines[index].get_text().strip())
-        print(prices[index].find('b').get_text())
+        title = medicines[index].get_text().strip()
+        p = prices[index].find('b').get_text()
+        print(title)
+        print(re.findall(r'(\d+\,?\d*)',p)[0])
         index += 1
 #            cursor.execute("""
 #                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)

@@ -39,7 +39,12 @@ CREATE TABLE IF NOT EXISTS Medicamentos (
 """)
 
 
+cursor.execute("insert into Empresas(nome, site) values ('Drogaria Net', 'http://www.drogarianet.com.br/')")
+cursor.execute("insert into Empresas(nome, site) values ('Drogas Raia', 'http://www.drogaraia.com.br/')")
+cursor.execute("insert into Empresas(nome, site) values ('Drogarias Pacheco', 'https://www.drogariaspacheco.com.br/')")
 cursor.execute("insert into Empresas(nome, site) values ('Pague Menos', 'https://www.paguemenos.com.br/')")
+cursor.execute("insert into Empresas(nome, site) values ('Ultra Farma', 'http://www.ultrafarma.com.br/')")
+cursor.execute("insert into Empresas(nome, site) values ('Drogaria Venancio', 'https://www.drogariavenancio.com.br/home')")
 
 conn.commit()
 

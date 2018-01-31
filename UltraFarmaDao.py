@@ -19,7 +19,7 @@ def recoverMedicine(site):
             title = medicine.find('div', class_='alt_prod_categorias').find('a', class_='lista_prod').get_text()
             price = medicine.find('div', class_='preco_lista_prod').find('div', class_='preco_por').get_text()
             print(title)
-            print(price)
+            print(re.findall(r'(\d+\,?\d*)',price)[0])
 #            cursor.execute("""
 #                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
 #                           VALUES (1,?,?)
@@ -32,6 +32,7 @@ def recoverMedicine(site):
 def recoverMedicineUltraFarma():
     site = "http://www.ultrafarma.com.br/categoria-372/ordem-1/Medicamentos.html";
     recoverMedicine(site)
+    return
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')        
