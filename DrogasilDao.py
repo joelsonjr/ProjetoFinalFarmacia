@@ -12,22 +12,36 @@ cursor = conn.cursor()
 def recoverMedicine(site):    
     page = requests.get(site)
     soup = BeautifulSoup(page.content, 'html.parser')
-    '''
+    
     medicines = soup.find_all('div', class_='product-info')
+    titles = []
     for medicine in medicines:
         try:
-            print(medicine.find('div', class_='product-name').find('a', class_='show-hover').get_text())
+            titles.append(medicine.find('div', class_='product-name').find('a', class_='show-hover').get_text())
         except AttributeError as e:
             continue
-    ''' 
-    prices = soup.find_all('div', class_='product-price')
-    for price in prices:
+    
+    prs = soup.find_all('div', class_='product-price')
+    prices = []
+    for price in prs:
         try:
-            print(price.find('div', class_='price-box').find('p', class_='special-price').find('span', property_='price').get_text())
+            itens = price.find('p', class_='special-price').find('span', class_='price').find_all('span')
+            for item in itens:
+                p = re.findall(r'(\d+\,?\d*)',item.get_text())
+                if p:
+                    prices.append(p[0])
         except AttributeError as e:
             continue
-        
-    '''
+    
+    index = 0
+    while index < len(prices):
+        print(titles[index])
+        print(prices[index])
+        index += 1
+    #print(len(titles))
+    #print(len(prices))
+    return
+'''
     medicines = soup.find_all('div', class_='caption text-center')
     for medicine in medicines:
         try:
@@ -39,11 +53,13 @@ def recoverMedicine(site):
 #                           """, (title, price[0]))
         except AttributeError as e:
             continue
-        '''
+   '''
+     
 def recoverMedicineDrogasil():
     #cursor.execute("delete from Medicamento where id_empresa = 1;")
     site = "http://www.drogasil.com.br/medicamentos.html";
     recoverMedicine(site)
+    return
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')
