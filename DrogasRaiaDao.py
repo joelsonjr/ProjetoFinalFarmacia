@@ -24,7 +24,6 @@ def recoverMedicine(site):
 #                           VALUES (1,?,?)
 #                           """, (title, price[0]))
         except AttributeError as e:
-            print(" NAO CONSEGUIU RECUPERAR O ITEM ")
             continue
             
 

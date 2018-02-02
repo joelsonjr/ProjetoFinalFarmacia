@@ -29,7 +29,7 @@ def recoverMedicine(site):
 def recoverMedicineDrogariaPereque():
     #cursor.execute("delete from Medicamento where id_empresa = 1;")
     site = "https://www.drogariapereque.com.br/medicamentos";
-    #recoverMedicine(site)
+    recoverMedicine(site)
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')

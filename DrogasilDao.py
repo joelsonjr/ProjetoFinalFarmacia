@@ -25,22 +25,26 @@ def recoverMedicine(site):
     prices = []
     for price in prs:
         try:
-            itens = price.find('p', class_='special-price').find('span', class_='price').find_all('span')
-            for item in itens:
-                p = re.findall(r'(\d+\,?\d*)',item.get_text())
-                if p:
-                    prices.append(p[0])
-        except AttributeError as e:
+            if price.find('p', class_='special-price').find('span', class_='price').get_text() == None:
+                print("NONE")
+            else:
+                print("HAS")
             continue
-    
-    index = 0
-    while index < len(prices):
-        print(titles[index])
-        print(prices[index])
-        index += 1
+            #p = re.findall(r'(\d+\,?\d*)', price.find('p', class_='special-price').find('span', class_='price').get_text())
+            if p:
+                prices.append(p[0])
+        except AttributeError as e:
+            prices.append(-1)
+            continue
+        
+    print(prices)       
+#    index = 0
+#    while index < len(prices):
+#        print(titles[index])
+#        print(prices[index])
+#        index += 1
     #print(len(titles))
     #print(len(prices))
-    return
 '''
     medicines = soup.find_all('div', class_='caption text-center')
     for medicine in medicines:

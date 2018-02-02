@@ -10,10 +10,13 @@ cursor = conn.cursor()
 
 def recoverMedicine(site):
     page = requests.get(site)
-    print(site)
     soup = BeautifulSoup(page.content, 'html.parser')
     #<div id="lista-produtos" class="product-list">
-    print(soup.find_all('div', class__='product-list'))
+    #div id="lista-produtos" class="product-list"
+    #medicines = soup.find_all('div', id_='lista-produtos')
+    soup.find('div', id_='banner-vitrine-categoria')
+    #for medicine in medicines:
+    #    print(medicine)
     #print(soup.find('div', class_='product-list'))
  #   try:        
 #        medicines = soup.find('div', id='product-list').find_all('div', class_='product-item ')
