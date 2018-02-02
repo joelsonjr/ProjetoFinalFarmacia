@@ -32,7 +32,6 @@ def recoverMedicine(site):
 def recoverMedicineUltraFarma():
     site = "http://www.ultrafarma.com.br/categoria-372/ordem-1/Medicamentos.html";
     recoverMedicine(site)
-    return
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')        
