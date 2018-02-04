@@ -17,19 +17,17 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.find('div', class_='Nome').get_text().strip()
-            price = medicine.find('div', class_='PrecoAgrupado').find('div', class_='PrecoPor').get_text()
-            print(title)
-            print(re.findall(r'(\d+\,?\d*)',price)[0])
-#            cursor.execute("""
-#                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
-#                           VALUES (1,?,?)
-#                           """, (title, price[0]))
+            price = re.findall(r'(\d+\,?\d*)', medicine.find('div', class_='PrecoAgrupado').find('div', class_='PrecoPor').get_text())
+            cursor.execute("""
+                           INSERT INTO Medicamentos(id_empresa, nome, preco)
+                           VALUES (3,?,?)
+                           """, (title, price[0]))
         except AttributeError as e:
             continue        
             
 
 def recoverMedicineDrogariaNet():
-    #cursor.execute("delete from Medicamento where id_empresa = 1;")
+    cursor.execute("delete from Medicamentos where id_empresa = 3;")
     site = "http://www.drogarianet.com.br/medicamentos.html";
     recoverMedicine(site)
     try:
@@ -46,6 +44,14 @@ def recoverMedicineDrogariaNet():
     except AttributeError as e:
         ""
             
+
+def selectMedicineDrogariaNet():
+    cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 3;")
+    data = []
+    for row in cursor:
+        data.append(row)
+    return data
+
 recoverMedicineDrogariaNet()
 
 conn.commit()

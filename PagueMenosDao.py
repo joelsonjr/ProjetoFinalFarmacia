@@ -15,19 +15,16 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.find('p', class_='price').a.get('title')
-            price = medicine.find('p', class_='price').a.find('ins', class_='price-new').get_text()
-            print(title)
-            print(re.findall(r'(\d+\,?\d*)',price)[0])
-#            cursor.execute("""
-#                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
-#                           VALUES (1,?,?)
-#                           """, (title, price[0]))
+            price = re.findall(r'(\d+\,?\d*)',medicine.find('p', class_='price').a.find('ins', class_='price-new').get_text())
+            cursor.execute("""
+                           INSERT INTO Medicamentos(id_empresa, nome, preco)
+                           VALUES (9,?,?)
+                           """, (title, price[0]))
         except AttributeError as e:
-            print(" NAO CONSEGUIU RECUPERAR O ITEM ")
             continue        
             
 def recoverMedicinePagueMenos():
-    #cursor.execute("delete from Medicamento where id_empresa = 1;")
+    cursor.execute("delete from Medicamentos where id_empresa = 9;")
     site = "https://www.paguemenos.com.br/medicamentos-e-saude";
     recoverMedicine(site)
     try:
@@ -42,6 +39,13 @@ def recoverMedicinePagueMenos():
             num_page += 1
     except AttributeError as e:
         ""
+        
+def selectMedicinePagueMenos():
+    cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 9;")
+    data = []
+    for row in cursor:
+        data.append(row)
+    return data
             
 recoverMedicinePagueMenos()
 

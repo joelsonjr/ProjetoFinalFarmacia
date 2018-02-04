@@ -23,16 +23,15 @@ def recoverMedicine(site):
     index = 0
     while (index < max_item):
         title = medicines[index].get_text().strip()
-        p = prices[index].find('b').get_text()
-        print(title)
-        print(re.findall(r'(\d+\,?\d*)',p)[0])
+        p = re.findall(r'(\d+\,?\d*)', prices[index].find('b').get_text())
         index += 1
-#            cursor.execute("""
-#                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
-#                           VALUES (1,?,?)
-#                           """, (title, price[0]))
+        cursor.execute("""
+                       INSERT INTO Medicamentos(id_empresa, nome, preco)
+                       VALUES (11,?,?)
+                       """, (title, p[0]))
 
 def recoverMedicineVenancio():
+    cursor.execute("delete from Medicamento where id_empresa = 11;")
     site = "https://www.drogariavenancio.com.br/departamento/1014/03/medicamentos";
     recoverMedicine(site)
     try:
@@ -47,9 +46,16 @@ def recoverMedicineVenancio():
             num_page += 1
     except AttributeError as e:
         ""
+
+def selectMedicineVenancio():
+    cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 11;")
+    data = []
+    for row in cursor:
+        data.append(row)
+    return data
+
         
-#cursor.execute("delete from Medicamento where id_empresa = 1;")
-recoverMedicineVenancio()
+#recoverMedicineVenancio()
 
 conn.commit()
 conn.close()

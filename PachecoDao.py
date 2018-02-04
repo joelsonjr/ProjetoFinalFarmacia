@@ -16,21 +16,19 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.find('h3').get_text()
-            price = medicine.find('span', class_='bestPrice transition_all').find('span', class_='the-price').get_text()
-            print(title)
-            print(re.findall(r'(\d+\,?\d*)',price)[0])
-#            cursor.execute("""
-#                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
-#                           VALUES (1,?,?)
-#                           """, (title, price[0]))
+            price = re.findall(r'(\d+\,?\d*)',medicine.find('span', class_='bestPrice transition_all').find('span', class_='the-price').get_text())
+            cursor.execute("""
+                           INSERT INTO Medicamentos(id_empresa, nome, preco)
+                           VALUES (8,?,?)
+                           """, (title, price[0]))
         except AttributeError as e:
-            print(" NAO CONSEGUIU RECUPERAR O ITEM ")
             continue        
             
 
 def recoverMedicinePacheco():
+    cursor.execute("delete from Medicamentos where id_empresa = 8;")
     site = "https://www.drogariaspacheco.com.br/medicamentos/";
-    recoverMedicine(site)
+    recoverMedicine(site)    
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -43,7 +41,15 @@ def recoverMedicinePacheco():
             num_page += 1
     except AttributeError as e:
         ""
-            
+        
+def selectMedicinePacheco():
+    cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 8;")
+    data = []
+    for row in cursor:
+        data.append(row)
+    return data
+
+
 recoverMedicinePacheco()
 
 conn.commit()

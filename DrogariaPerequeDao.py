@@ -16,20 +16,18 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.p.get_text().strip()
-            price = medicine.find_all('div')[2].find('div').find('div', class_='row').find('div').h4.find_all('label')[1].get_text()
-            print(title)
-            print(re.findall(r'(\d+\,?\d*)',price)[0])
-#            cursor.execute("""
-#                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
-#                           VALUES (1,?,?)
-#                           """, (title, price[0]))
+            price = re.findall(r'(\d+\,?\d*)', medicine.find_all('div')[2].find('div').find('div', class_='row').find('div').h4.find_all('label')[1].get_text())
+            cursor.execute("""
+                           INSERT INTO Medicamentos(id_empresa, nome, preco)
+                           VALUES (4,?,?)
+                           """, (title, price[0]))
         except AttributeError as e:
             continue
 
 def recoverMedicineDrogariaPereque():
-    #cursor.execute("delete from Medicamento where id_empresa = 1;")
+    cursor.execute("delete from Medicamentos where id_empresa = 4;")
     site = "https://www.drogariapereque.com.br/medicamentos";
-    recoverMedicine(site)
+    recoverMedicine(site)    
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -43,6 +41,13 @@ def recoverMedicineDrogariaPereque():
     except AttributeError as e:
         ""
             
+def selectMedicineDrogariaPereque():
+    cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 4;")
+    data = []
+    for row in cursor:
+        data.append(row)
+    return data
+
 recoverMedicineDrogariaPereque()
 
 conn.commit()

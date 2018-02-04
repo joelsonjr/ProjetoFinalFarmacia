@@ -16,21 +16,19 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.find('div', class_='product-name').find('a', class_='show-hover').get_text().strip()
-            price = medicine.find('div', class_='product-price').find('p', class_='special-price').find('span', class_='price').get_text().strip()
-            print(title)
-            print(re.findall(r'(\d+\,?\d*)',price)[0])
-#            cursor.execute("""
-#                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
-#                           VALUES (1,?,?)
-#                           """, (title, price[0]))
+            price = re.findall(r'(\d+\,?\d*)',medicine.find('div', class_='product-price').find('p', class_='special-price').find('span', class_='price').get_text().strip())
+            cursor.execute("""
+                           INSERT INTO Medicamentos(id_empresa, nome, preco)
+                           VALUES (6,?,?)
+                           """, (title, price[0]))
         except AttributeError as e:
             continue
             
 
 def recoverMedicineDrogasRaia():
-    #cursor.execute("delete from Medicamento where id_empresa = 1;")
+    cursor.execute("delete from Medicamentos where id_empresa = 6;")
     site = "http://www.drogaraia.com.br/saude/medicamentos.html";
-    recoverMedicine(site)
+    recoverMedicine(site)    
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')
@@ -44,6 +42,14 @@ def recoverMedicineDrogasRaia():
             num_page += 1
     except AttributeError as e:
         ""
+        
+def selectMedicineDrogasRaia():
+    cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 6;")
+    data = []
+    for row in cursor:
+        data.append(row)
+    return data
+
             
 recoverMedicineDrogasRaia()
 

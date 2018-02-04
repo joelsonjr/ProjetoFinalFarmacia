@@ -15,14 +15,16 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.a.get('title')
-            price = medicine.a.find('span', class_='regular-price').get_text()
-            print(title)
-            print(price)
+            price = re.findall(r'(\d+\,?\d*)', medicine.a.find('span', class_='regular-price').get_text())
+            cursor.execute("""
+                           INSERT INTO Medicamentos(id_empresa, nome, preco)
+                           VALUES (7,?,?)
+                           """, (title, price[0]))            
         except AttributeError as e:
-            print(" NAO CONSEGUIU RECUPERAR O ITEM ")
             continue
 
 def recoverMedicineOnofre():
+    cursor.execute("delete from Medicamentos where id_empresa = 7;")
     site = "https://www.onofre.com.br/medicamentos/51/01";
     recoverMedicine(site)
             

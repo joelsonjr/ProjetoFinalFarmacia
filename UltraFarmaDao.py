@@ -17,21 +17,19 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.find('div', class_='alt_prod_categorias').find('a', class_='lista_prod').get_text()
-            price = medicine.find('div', class_='preco_lista_prod').find('div', class_='preco_por').get_text()
-            print(title)
-            print(re.findall(r'(\d+\,?\d*)',price)[0])
-#            cursor.execute("""
-#                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
-#                           VALUES (1,?,?)
-#                           """, (title, price[0]))
+            price = re.findall(r'(\d+\,?\d*)',medicine.find('div', class_='preco_lista_prod').find('div', class_='preco_por').get_text())
+            cursor.execute("""
+                           INSERT INTO Medicamentos(id_empresa, nome, preco)
+                           VALUES (10,?,?)
+                           """, (title, price[0]))
         except AttributeError as e:
-            print(" NAO CONSEGUIU RECUPERAR O ITEM ")
             continue
             
 
 def recoverMedicineUltraFarma():
+    cursor.execute("delete from Medicamentos where id_empresa = 10;")
     site = "http://www.ultrafarma.com.br/categoria-372/ordem-1/Medicamentos.html";
-    recoverMedicine(site)
+    recoverMedicine(site)    
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')        
@@ -49,6 +47,13 @@ def recoverMedicineUltraFarma():
     except AttributeError as e:
         ""
             
+def selectMedicineUltraFarma():
+    cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 10;")
+    data = []
+    for row in cursor:
+        data.append(row)
+    return data
+
 recoverMedicineUltraFarma()
 
 conn.commit()

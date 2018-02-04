@@ -16,20 +16,20 @@ def recoverMedicine(site):
     medicines = soup.find_all('div', class_='boxProduto')
     for medicine in medicines:
         try:
-            print(medicine.find('div', class_='detalhes').img.get('title').strip())
-            price = medicine.find('div', class_='detalhes').find('div', class_='col-sm-12 text-center preco').get_text()
-            print(re.findall(r'(\d+\,?\d*)',price)[0])
-#            cursor.execute("""
-#                           INSERT INTO Medicamentos(id_empresa, nome, preco, peso, categoria, especial)
-#                           VALUES (1,?,?)
-#                           """, (title, price[0]))
+            title = medicine.find('div', class_='detalhes').img.get('title').strip()
+            price = re.findall(r'(\d+\,?\d*)',medicine.find('div', class_='detalhes').find('div', class_='col-sm-12 text-center preco').get_text())
+            if title and price[0]:
+                cursor.execute("""
+                               INSERT INTO Medicamentos(id_empresa, nome, preco)
+                               VALUES (1,?,?)
+                               """, (title, price[0]))
         except AttributeError as e:
             continue
 
             
 
 def recoverMedicineCallFarma():
-    #cursor.execute("delete from Medicamento where id_empresa = 1;")
+    cursor.execute("delete from Medicamentos where id_empresa = 1;")
     site = "https://www.callfarma.com.br/departamento/medicamentos";
     recoverMedicine(site)
     try:
@@ -46,8 +46,16 @@ def recoverMedicineCallFarma():
             num_page += 1
     except AttributeError as e:
         ""
-            
-recoverMedicineCallFarma()
+
+def selectMedicineCallFarma():
+    cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 1;")
+    data = []
+    for row in cursor:
+        data.append(row)
+    return data
+
+selectMedicineCallFarma()
+#recoverMedicineCallFarma()
 
 conn.commit()
 conn.close()
