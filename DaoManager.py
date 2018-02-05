@@ -1,12 +1,25 @@
-import RecoverPrix
-import RecoverZonaSul
+import CallFarmaDao
+import DrogariaCristal
+import DrogariaNetDao
+import DrogariaPerequeDao
+import DrogariaSaoPaulo
+import DrogasRaiaDao
+import OnofreDao
+import PachecoDao
+import PagueMenosDao
+import UltraFarmaDao
+import VenancioDao
+
 
 def recoverData():
-    #recuperando comida prix
-    #RecoverPrix.recoverFoodPrix()
-    #RecoverPrix.recoverDrinksPrix()
-
-    #recuperando comida zona sul
-    RecoverZonaSul.recoverFoodZonaSul()
-    #RecoverZonaSul.recoverDrinksZonaSul()
-
+    CallFarmaDao.recoverMedicineCallFarma()
+    DrogariaCristal.recoverMedicineDrogariaCristal()
+    DrogariaNetDao.recoverMedicineDrogariaNet()
+    DrogariaPerequeDao.recoverMedicineDrogariaPereque()
+    DrogariaSaoPaulo.recoverMedicineDrogariaSaoPaulo()
+    DrogasRaiaDao.recoverMedicineDrogasRaia()
+    OnofreDao.recoverMedicineOnofre()
+    PachecoDao.recoverMedicinePacheco()
+    PagueMenosDao.recoverMedicinePagueMenos()
+    UltraFarmaDao.recoverMedicineUltraFarma()
+    VenancioDao.recoverMedicineVenancio()

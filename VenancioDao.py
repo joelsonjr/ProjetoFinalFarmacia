@@ -5,11 +5,9 @@ import numpy as np
 from bs4 import BeautifulSoup
 import sqlite3
 
-conn = sqlite3.connect('products.db')
-
-cursor = conn.cursor()
-
-def recoverMedicine(site):    
+def recoverMedicine(site):
+    conn = sqlite3.connect('products.db')
+    cursor = conn.cursor()
     page = requests.get(site)
     soup = BeautifulSoup(page.content, 'html.parser')
     medicines = soup.find_all('li', class_="nome")
@@ -29,9 +27,15 @@ def recoverMedicine(site):
                        INSERT INTO Medicamentos(id_empresa, nome, preco)
                        VALUES (11,?,?)
                        """, (title, p[0]))
+    conn.commit()
+    conn.close()
 
 def recoverMedicineVenancio():
+    conn = sqlite3.connect('products.db')
+    cursor = conn.cursor()
     cursor.execute("delete from Medicamento where id_empresa = 11;")
+    conn.commit()
+    conn.close()
     site = "https://www.drogariavenancio.com.br/departamento/1014/03/medicamentos";
     recoverMedicine(site)
     try:
@@ -48,15 +52,12 @@ def recoverMedicineVenancio():
         ""
 
 def selectMedicineVenancio():
+    conn = sqlite3.connect('products.db')
+    cursor = conn.cursor()
     cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 11;")
+    conn.close()
     data = []
     for row in cursor:
         data.append(row)
     return data
 
-        
-#recoverMedicineVenancio()
-
-conn.commit()
-conn.close()
-print('Dados inseridos com sucesso.')

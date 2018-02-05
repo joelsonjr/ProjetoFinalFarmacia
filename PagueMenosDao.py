@@ -4,11 +4,9 @@ import numpy as np
 from bs4 import BeautifulSoup
 import sqlite3
 
-conn = sqlite3.connect('products.db')
-
-cursor = conn.cursor()
-
 def recoverMedicine(site):    
+    conn = sqlite3.connect('products.db')
+    cursor = conn.cursor()
     page = requests.get(site)
     soup = BeautifulSoup(page.content, 'html.parser')
     medicines = soup.find_all('div', class_="product-content")
@@ -22,9 +20,15 @@ def recoverMedicine(site):
                            """, (title, price[0]))
         except AttributeError as e:
             continue        
+    conn.commit()
+    conn.close()
             
 def recoverMedicinePagueMenos():
+    conn = sqlite3.connect('products.db')
+    cursor = conn.cursor()
     cursor.execute("delete from Medicamentos where id_empresa = 9;")
+    conn.commit()
+    conn.close()
     site = "https://www.paguemenos.com.br/medicamentos-e-saude";
     recoverMedicine(site)
     try:
@@ -41,14 +45,12 @@ def recoverMedicinePagueMenos():
         ""
         
 def selectMedicinePagueMenos():
+    conn = sqlite3.connect('products.db')
+    cursor = conn.cursor()
     cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 9;")
+    conn.close()
     data = []
     for row in cursor:
         data.append(row)
     return data
             
-recoverMedicinePagueMenos()
-
-conn.commit()
-conn.close()
-print('Dados inseridos com sucesso.')
