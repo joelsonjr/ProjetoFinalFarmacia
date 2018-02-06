@@ -13,7 +13,7 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.a.get('title')
-            price = re.findall(r'(\d+\,?\d*)', medicine.a.find('span', class_='regular-price').get_text())
+            price = re.findall(r'(\d+ ?\d+\,?\d*)', medicine.a.find('span', class_='regular-price').get_text())
             cursor.execute("""
                            INSERT INTO Medicamentos(id_empresa, nome, preco)
                            VALUES (7,?,?)
@@ -24,6 +24,7 @@ def recoverMedicine(site):
     conn.close()
 
 def recoverMedicineOnofre():
+    print("INICIO ONOFRE")
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
     cursor.execute("delete from Medicamentos where id_empresa = 7;")
@@ -31,3 +32,4 @@ def recoverMedicineOnofre():
     conn.close()
     site = "https://www.onofre.com.br/medicamentos/51/01";
     recoverMedicine(site)
+    print("FIM ONOFRE")

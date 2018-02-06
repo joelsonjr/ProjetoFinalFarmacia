@@ -14,9 +14,7 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.find('div', class_='descricao').get_text().strip()
-            price = re.findall(r'(\d+\,?\d*)', medicine.find('div', class_='product-box-control').find('div', class_='boxPreco').find('ul', class_='preco').find('li', class_='precoPor comum-color').get_text().strip())
-            print(title)
-            print(price[0])
+            price = re.findall(r'(\d+ ?\d+\,?\d*)', medicine.find('div', class_='product-box-control').find('div', class_='boxPreco').find('ul', class_='preco').find('li', class_='precoPor comum-color').get_text().strip())
             if title and price[0]:
                 cursor.execute("""
                                INSERT INTO Medicamentos(id_empresa, nome, preco)
@@ -31,6 +29,7 @@ def recoverMedicine(site):
             
 
 def recoverMedicineDrogariaCristal():
+    print("INICIO CRISTAL")
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
     cursor.execute("delete from Medicamentos where id_empresa = 2;")
@@ -50,6 +49,7 @@ def recoverMedicineDrogariaCristal():
             num_page += 1
     except AttributeError as e:
         ""
+    print("FIM CRISTAL")
 
 def selectMedicineDrogariaCristal():
     conn = sqlite3.connect('products.db')
@@ -61,4 +61,3 @@ def selectMedicineDrogariaCristal():
     for row in cursor:
         data.append(row)
     return data
-

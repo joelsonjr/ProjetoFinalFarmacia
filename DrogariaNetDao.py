@@ -9,13 +9,12 @@ def recoverMedicine(site):
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
     page = requests.get(site)
-    print(site)
     soup = BeautifulSoup(page.content, 'html.parser')
     medicines = soup.find('div', class_='Produtos').find_all('li', class_="Produto")
     for medicine in medicines:
         try:
             title = medicine.find('div', class_='Nome').get_text().strip()
-            price = re.findall(r'(\d+\,?\d*)', medicine.find('div', class_='PrecoAgrupado').find('div', class_='PrecoPor').get_text())
+            price = re.findall(r'(\d+ ?\d+\,?\d*)', medicine.find('div', class_='PrecoAgrupado').find('div', class_='PrecoPor').get_text())
             cursor.execute("""
                            INSERT INTO Medicamentos(id_empresa, nome, preco)
                            VALUES (3,?,?)
@@ -27,6 +26,7 @@ def recoverMedicine(site):
             
 
 def recoverMedicineDrogariaNet():
+    print("INICIO DROGA NET")
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
     cursor.execute("delete from Medicamentos where id_empresa = 3;")
@@ -47,6 +47,7 @@ def recoverMedicineDrogariaNet():
             num_page += 1
     except AttributeError as e:
         ""
+    print("FIM DROGA NET")
             
 
 def selectMedicineDrogariaNet():
@@ -58,5 +59,3 @@ def selectMedicineDrogariaNet():
     for row in cursor:
         data.append(row)
     return data
-
-

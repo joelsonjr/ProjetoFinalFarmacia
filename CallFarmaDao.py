@@ -5,8 +5,8 @@ import numpy as np
 from bs4 import BeautifulSoup
 import sqlite3
 
-#conn = sqlite3.connect('products.db')
-#cursor = conn.cursor()
+conn = sqlite3.connect('products.db')
+cursor = conn.cursor()
 
 def recoverMedicine(site):    
     conn = sqlite3.connect('products.db')
@@ -17,7 +17,7 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.find('div', class_='detalhes').img.get('title').strip()
-            price = re.findall(r'(\d+\,?\d*)',medicine.find('div', class_='detalhes').find('div', class_='col-sm-12 text-center preco').get_text())
+            price = re.findall(r'(\d+ ?\d+\,?\d*)',medicine.find('div', class_='detalhes').find('div', class_='col-sm-12 text-center preco').get_text())
             if title and price[0]:
                 cursor.execute("""
                                INSERT INTO Medicamentos(id_empresa, nome, preco)
@@ -61,10 +61,3 @@ def selectMedicineCallFarma():
     for row in cursor:
         data.append(row)
     return data
-
-#selectMedicineCallFarma()
-#recoverMedicineCallFarma()
-
-#conn.commit()
-#conn.close()
-#print('Dados inseridos com sucesso.')

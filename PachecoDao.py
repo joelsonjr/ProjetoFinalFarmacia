@@ -14,7 +14,7 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.find('h3').get_text()
-            price = re.findall(r'(\d+\,?\d*)',medicine.find('span', class_='bestPrice transition_all').find('span', class_='the-price').get_text())
+            price = re.findall(r'(\d+ ?\d+\,?\d*)',medicine.find('span', class_='bestPrice transition_all').find('span', class_='the-price').get_text())
             cursor.execute("""
                            INSERT INTO Medicamentos(id_empresa, nome, preco)
                            VALUES (8,?,?)
@@ -26,6 +26,7 @@ def recoverMedicine(site):
             
 
 def recoverMedicinePacheco():
+    print("INICIO PACHECO")
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
     cursor.execute("delete from Medicamentos where id_empresa = 8;")
@@ -45,6 +46,7 @@ def recoverMedicinePacheco():
             num_page += 1
     except AttributeError as e:
         ""
+    print("FIM PACHECO")
         
 def selectMedicinePacheco():
     conn = sqlite3.connect('products.db')

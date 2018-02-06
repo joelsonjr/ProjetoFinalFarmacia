@@ -14,11 +14,15 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.find('h3').get_text()
-            price = re.findall(r'(\d+\,?\d*)', medicine.find('span', class_='bestPrice transition_all').find('span', class_='the-price').get_text())
+            price = re.findall(r'(\d+ ?\d+\,?\d*)', medicine.find('span', class_='bestPrice transition_all').find('span', class_='the-price').get_text())
+            print(title)
+            print(price[0])
+            '''
             cursor.execute("""
                            INSERT INTO Medicamentos(id_empresa, nome, preco)
                            VALUES (5,?,?)
                            """, (title, price[0]))
+            '''
         except AttributeError as e:
             continue
     conn.commit()
@@ -33,6 +37,7 @@ def recoverMedicineDrogariaSaoPaulo():
     conn.close()
     site = "https://www.drogariasaopaulo.com.br/medicamentos?PS=20&O=OrderByTopSaleDESC";
     recoverMedicine(site)
+    '''
     try:
         page = requests.get(site)
         soup = BeautifulSoup(page.content, 'html.parser')        
@@ -45,7 +50,7 @@ def recoverMedicineDrogariaSaoPaulo():
             num_page += 1
     except AttributeError as e:
         ""
-            
+    '''     
 
 def selectMedicineSaoPaulo():
     conn = sqlite3.connect('products.db')
@@ -59,3 +64,5 @@ def selectMedicineSaoPaulo():
     conn.close()
     return data
 
+
+recoverMedicineDrogariaSaoPaulo()

@@ -1,4 +1,5 @@
 import re
+import ast
 import requests
 import numpy as np
 from bs4 import BeautifulSoup
@@ -13,7 +14,7 @@ def recoverMedicine(site):
     for medicine in medicines:
         try:
             title = medicine.find('p', class_='price').a.get('title')
-            price = re.findall(r'(\d+\,?\d*)',medicine.find('p', class_='price').a.find('ins', class_='price-new').get_text())
+            price = re.findall(r'(\d+ ?\d+\,?\d*)',medicine.find('p', class_='price').a.find('ins', class_='price-new').get_text())
             cursor.execute("""
                            INSERT INTO Medicamentos(id_empresa, nome, preco)
                            VALUES (9,?,?)
@@ -24,6 +25,7 @@ def recoverMedicine(site):
     conn.close()
             
 def recoverMedicinePagueMenos():
+    print("INICIO PAGUE MENOS")
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
     cursor.execute("delete from Medicamentos where id_empresa = 9;")
@@ -43,6 +45,7 @@ def recoverMedicinePagueMenos():
             num_page += 1
     except AttributeError as e:
         ""
+    print("FIM PAGUE MENOS")
         
 def selectMedicinePagueMenos():
     conn = sqlite3.connect('products.db')
@@ -53,4 +56,5 @@ def selectMedicinePagueMenos():
     for row in cursor:
         data.append(row)
     return data
+
             
