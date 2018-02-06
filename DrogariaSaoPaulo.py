@@ -54,8 +54,6 @@ def selectMedicineSaoPaulo():
     conn.close()
     data = []
     for row in cursor:
-        data.append(row)    
-    conn.commit()
-    conn.close()
+        data.append(row)
     return data
 

@@ -23,8 +23,7 @@ def recoverMedicine(site):
                                VALUES (2,?,?)
                                """, (title, price[0]))
         except AttributeError as e:
-            continue
-        
+            continue        
     conn.commit()
     conn.close()
 
@@ -55,7 +54,6 @@ def selectMedicineDrogariaCristal():
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
     cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 2;")
-    conn.commit()
     conn.close()
     data = []
     for row in cursor:

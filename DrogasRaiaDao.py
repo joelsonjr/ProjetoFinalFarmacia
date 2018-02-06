@@ -5,8 +5,6 @@ import numpy as np
 from bs4 import BeautifulSoup
 import sqlite3
 
-
-
 def recoverMedicine(site):    
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
