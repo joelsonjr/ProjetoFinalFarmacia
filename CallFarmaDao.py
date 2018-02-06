@@ -5,9 +5,6 @@ import numpy as np
 from bs4 import BeautifulSoup
 import sqlite3
 
-conn = sqlite3.connect('products.db')
-cursor = conn.cursor()
-
 def recoverMedicine(site):    
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
@@ -25,7 +22,6 @@ def recoverMedicine(site):
                                """, (title, price[0]))
         except AttributeError as e:
             continue
-        
     conn.commit()
     conn.close()
 
@@ -36,8 +32,7 @@ def recoverMedicineCallFarma():
     cursor = conn.cursor()
     cursor.execute("delete from Medicamentos where id_empresa = 1;")
     conn.commit()
-    conn.close()
-    
+    conn.close()    
     site = "https://www.callfarma.com.br/departamento/medicamentos";
     recoverMedicine(site)
     try:
@@ -56,7 +51,10 @@ def recoverMedicineCallFarma():
         ""
 
 def selectMedicineCallFarma():
+    conn = sqlite3.connect('products.db')
+    cursor = conn.cursor()
     cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 1;")
+    conn.close()
     data = []
     for row in cursor:
         data.append(row)

@@ -56,8 +56,5 @@ def selectMedicineDrogariaPereque():
     data = []
     for row in cursor:
         data.append(row)
-        
-    conn.commit()
-    conn.close()
     return data
 
