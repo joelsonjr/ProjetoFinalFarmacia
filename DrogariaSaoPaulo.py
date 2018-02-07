@@ -17,12 +17,10 @@ def recoverMedicine(site):
             price = re.findall(r'(\d+ ?\d+\,?\d*)', medicine.find('span', class_='bestPrice transition_all').find('span', class_='the-price').get_text())
             print(title)
             print(price[0])
-            '''
             cursor.execute("""
                            INSERT INTO Medicamentos(id_empresa, nome, preco)
                            VALUES (5,?,?)
                            """, (title, price[0]))
-            '''
         except AttributeError as e:
             continue
     conn.commit()

@@ -28,7 +28,6 @@ def recoverMedicine(site):
             
 
 def recoverMedicineDrogariaCristal():
-    print("INICIO CRISTAL")
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
     cursor.execute("delete from Medicamentos where id_empresa = 2;")
@@ -48,7 +47,6 @@ def recoverMedicineDrogariaCristal():
             num_page += 1
     except AttributeError as e:
         ""
-    print("FIM CRISTAL")
 
 def selectMedicineDrogariaCristal():
     conn = sqlite3.connect('products.db')

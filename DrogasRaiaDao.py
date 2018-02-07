@@ -15,8 +15,10 @@ def recoverMedicine(site):
         try:
             title = medicine.find('div', class_='product-name').find('a', class_='show-hover').get_text().strip()
             price = re.findall(r'(\d+ ?\d+\,?\d*)',medicine.find('div', class_='product-price').find('p', class_='special-price').find('span', class_='price').get_text().strip())
+            print(title)
+            print(price[0])
             cursor.execute("""
-                           INSERT INTO Medicamentos(id_empresa, nome, preco)
+                           INSERT OR REPLACE INTO Medicamentos(id_empresa, nome, preco)
                            VALUES (6,?,?)
                            """, (title, price[0]))
         except AttributeError as e:
@@ -58,3 +60,5 @@ def selectMedicineDrogasRaia():
     for row in cursor:
         data.append(row)
     return data
+
+recoverMedicineDrogasRaia()

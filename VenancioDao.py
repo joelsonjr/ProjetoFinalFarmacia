@@ -22,6 +22,8 @@ def recoverMedicine(site):
     while (index < max_item):
         title = medicines[index].get_text().strip()
         p = re.findall(r'(\d+ ?\d+\,?\d*)', prices[index].find('b').get_text())
+        print(title)
+        print(p[0])
         index += 1
         cursor.execute("""
                        INSERT INTO Medicamentos(id_empresa, nome, preco)
@@ -31,10 +33,9 @@ def recoverMedicine(site):
     conn.close()
 
 def recoverMedicineVenancio():
-    print("INICIO VENANCIO")
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
-    cursor.execute("delete from Medicamento where id_empresa = 11;")
+    cursor.execute("delete from Medicamentos where id_empresa = 11;")
     conn.commit()
     conn.close()
     site = "https://www.drogariavenancio.com.br/departamento/1014/03/medicamentos";
@@ -51,7 +52,6 @@ def recoverMedicineVenancio():
             num_page += 1
     except AttributeError as e:
         ""
-    print("FIM VENANCIO")
 
 def selectMedicineVenancio():
     conn = sqlite3.connect('products.db')
@@ -63,3 +63,4 @@ def selectMedicineVenancio():
         data.append(row)
     return data
 
+recoverMedicineVenancio()
