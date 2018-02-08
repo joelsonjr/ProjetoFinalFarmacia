@@ -1,3 +1,4 @@
+import sqlite3
 #import DaoManager
 
 #DaoManager.recoverData()
@@ -23,7 +24,14 @@
 
 products = [()]
 
-def selectMedicines(id_company):
+def get_companies(conn):
+    cursor = conn.cursor()
+    c = []
+    for row in cursor.execute("select * from empresas;"):
+        c.append(row)
+    return c
+    
+def medicines(id_company):
     conn = sqlite3.connect('products.db')
     cursor = conn.cursor()
     cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 3;")
@@ -32,3 +40,16 @@ def selectMedicines(id_company):
     for row in cursor:
         data.append(row)
     return data
+
+
+def project():
+    conn = sqlite3.connect('products.db')
+    companies = get_companies(conn)
+    company = 0
+    while (company < companies.count):
+        print(companies[company][0])
+        company += 1
+    
+    conn.close()
+    
+project()
