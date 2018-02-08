@@ -1,28 +1,39 @@
 import sqlite3
-#import DaoManager
+import numpy as np
+import matplotlib.pyplot as plt
+from platypus import NSGAII, Problem, Real, Integer
+# plot the results using matplotlib
+import matplotlib.pyplot as plt
 
+#import DaoManager
 #DaoManager.recoverData()
 
+products = [("dorflex","10 comprimidos"),
+            ("cimegripe","20 c"),
+            ("Finasterida","5mg"),
+            ("Triazol","4"),
+            ("Stub","30"),
+            ("damater", ""),
+            ("Neosaldina","30"),
+            ("Dexilant 60mg","60"),
+            ("TEBONIN","40"),
+            ("Benegrip","20")]
 
-#'%dorflex%10 comprimidos' (1,2,3,4,5,7,8,10)
-#'%doril %6%' (2,3,4)
-#'%cimegripe%20 c%' (1,2,3,4,10)
-#'%Finasterida%5mg%'(3,4,6, 10)
-#'%Triazol%4%' (3,10,11)
-#'%Stub%30%' (1,2,10,11)
-#'%damater%' (3,4,6,9)
-#'%Neosaldina%30%' (1,2,3,9,10)
-#'%Dexilant 60mg%60%' (5,8,9)
-#'%TEBONIN%40%' (6,10)
-#'%Benegrip%20%' (2,3,10)
+def schaffer(id_company, conn):
+    cursor = conn.cursor()
+    list_product = []
+    lin = 0
+    for product in products:
+        p = "%" + product[0] + "%" + product[1] + "%"
+        for row in  cursor.execute("""
+                       select nome, min(preco) from Medicamentos where id_empresa = ? and nome like ?;
+                       """, (id_company, p)):
+            if row[0]:
+                list_product.append(row)
+    amount = len(list_product)
+    total_price = 10
+    return [amount, total_price]
 
-#example
-#http://www.sqlitetutorial.net/sqlite-python/sqlite-python-select/
-#select id_empresa, nome, min(preco) from medicamentos
-#where nome like '%dorflex%10%comprimidos'
-#and id_empresa = 8
-
-products = [()]
 
 def get_companies(conn):
     cursor = conn.cursor()
@@ -30,26 +41,46 @@ def get_companies(conn):
     for row in cursor.execute("select * from empresas;"):
         c.append(row)
     return c
-    
-def medicines(id_company):
-    conn = sqlite3.connect('products.db')
-    cursor = conn.cursor()
-    cursor.execute("select id_empresa, nome, preco from Medicamentos where id_empresa = 3;")
-    conn.close()
-    data = []
-    for row in cursor:
-        data.append(row)
-    return data
 
 
 def project():
     conn = sqlite3.connect('products.db')
     companies = get_companies(conn)
+    
+    problem = Problem(len(companies),2)
+    #problem.types[:] = [Integer(1, nlojas) for _ range(nprodutos)]    
+    
+    problem.function = schaffer
+
+    algorithm = NSGAII(problem)
+    algorithm.run(10000)    
+    
     company = 0
-    while (company < companies.count):
-        print(companies[company][0])
+    while (company < len(companies)):
+        result = schaffer(companies[company][0], conn)
+        print(result)
         company += 1
     
     conn.close()
+    
+    plt.scatter([s.objectives[0] for s in algorithm.result],
+            [s.objectives[1] for s in algorithm.result])
+    plt.xlim([0, 1.1])
+    plt.ylim([0, 1.1])
+    plt.xlabel("Preço")
+    plt.ylabel("Distancia")
+    plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
     
 project()
